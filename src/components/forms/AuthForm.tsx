@@ -36,7 +36,14 @@ export function AuthForm() {
   });
   async function onLogin(data: LoginInput) {
     try {
-      await login.mutateAsync(data);
+      // await login.mutateAsync(data);
+      await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
       toast.success("Login successful!");
     } catch (error) {
       toast.error(`Login failed. Please check your credentials. ~ ${error}`);
@@ -87,7 +94,11 @@ export function AuthForm() {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full mt-5" disabled={isLoading}>
+                  <Button
+                    type="submit"
+                    className="w-full mt-5"
+                    disabled={isLoading}
+                  >
                     {isLoading ? "Loading..." : "Login"}
                   </Button>
                 </form>
@@ -133,7 +144,11 @@ export function AuthForm() {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full mt-5" disabled={isLoading}>
+                  <Button
+                    type="submit"
+                    className="w-full mt-5"
+                    disabled={isLoading}
+                  >
                     {isLoading ? "Loading..." : "Register"}
                   </Button>
                 </form>
