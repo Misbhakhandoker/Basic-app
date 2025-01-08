@@ -7,7 +7,7 @@ export default function AuthPage(){
             <div className="max-w-md mx-auto">
                 <h1 className="text-2xl font-bold text-center mb-6">
                 Welcome Back
-                </h1>
+                </h1> 
                 <AuthForm />
             </div>
         </main>
