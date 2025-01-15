@@ -12,7 +12,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 export function AuthForm() {
@@ -34,29 +41,45 @@ export function AuthForm() {
       password: "",
     },
   });
-  async function onLogin(data: LoginInput) {
-    try {
-      // await login.mutateAsync(data);
-      await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      toast.success("Login successful!");
-    } catch (error) {
-      toast.error(`Login failed. Please check your credentials. ~ ${error}`);
+  interface ErrorResponse {
+    response?: {
+      data?: {
+        message?: string
+      }
     }
   }
+  async function onLogin(data: LoginInput) {
+    try {
+      await login.mutateAsync(data);
+      // await fetch("http://localhost:3000/api/auth/login", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(data),
+      // });
+      // toast.success("Login successful!");
+
+    } catch (error) {
+      console.log('login error', error);
+      const typedError = error as ErrorResponse
+      const errorMessage = typedError?.response?.data?.message || "An unknown error occurred"
+      
+      toast.error(`${errorMessage}`);
+    }
+  }
+
   async function onRegister(data: RegisterInput) {
     try {
       await register.mutateAsync(data);
       toast.success("Registration successful!");
     } catch (error) {
-      toast.error(`Registration failed. Please try again. ~ ${error}`);
+      // console.log(error);
+      const typedError = error as ErrorResponse
+      const errorMessage = typedError?.response?.data?.message || "An unknown error occurred";
+      toast.error(`${errorMessage}`);
     }
-  }
+  } 
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -79,6 +102,7 @@ export function AuthForm() {
                         <FormControl>
                           <Input placeholder="email@example.com" {...field} />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -89,8 +113,13 @@ export function AuthForm() {
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input type="password" {...field} />
+                          <Input
+                            placeholder="********"
+                            type="password"
+                            {...field}
+                          />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -117,6 +146,7 @@ export function AuthForm() {
                         <FormControl>
                           <Input placeholder="Enter your name" {...field} />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -139,8 +169,13 @@ export function AuthForm() {
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input type="password" {...field} />
+                          <Input
+                            placeholder="********"
+                            type="password"
+                            {...field}
+                          />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />

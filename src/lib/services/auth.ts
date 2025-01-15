@@ -13,7 +13,7 @@ export async function loginUser(data: LoginInput) {
       }
     );
 
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Login request failed:", error);
     throw error;
@@ -21,9 +21,18 @@ export async function loginUser(data: LoginInput) {
 }
 
 export async function registerUser(data: RegisterInput) {
-  const response = await axios.post(
-    "http://localhost:3000/api/auth/register",
-    data
-  );
-  return response.data;
+ try {
+   const response = await axios.post(
+     "http://localhost:3000/api/auth/register",
+     data, 
+     {
+       headers: {
+         "Content-Type": "application/json",
+       },
+     }
+   );
+   return response.data;
+ } catch (error) {
+    throw error;
+ }
 }
